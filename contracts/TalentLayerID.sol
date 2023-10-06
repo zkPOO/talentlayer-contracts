@@ -477,7 +477,7 @@ contract TalentLayerID is ERC2771RecipientUpgradeable, ERC721Upgradeable, UUPSUp
      */
     function _transfer(address from, address to, uint256 tokenId) internal virtual override(ERC721Upgradeable) {
         require(!hasActivity[tokenId], "Token transfer is not allowed");
-        require(balanceOf(to) == 0, "Receiver already has a TalentLayer ID");
+        // require(balanceOf(to) == 0, "Receiver already has a TalentLayer ID");
         ids[from] = 0;
         ids[to] = tokenId;
         ERC721Upgradeable._transfer(from, to, tokenId);
@@ -581,7 +581,7 @@ contract TalentLayerID is ERC2771RecipientUpgradeable, ERC721Upgradeable, UUPSUp
         string calldata _handle,
         uint256 _platformId
     ) {
-        require(balanceOf(_userAddress) == 0, "You already have a TalentLayerID");
+        // require(balanceOf(_userAddress) == 0, "You already have a TalentLayerID");
         require(!takenHandles[_handle], "Handle already taken");
         if (_platformId != PROTOCOL_ID) {
             talentLayerPlatformIdContract.isValid(_platformId);
