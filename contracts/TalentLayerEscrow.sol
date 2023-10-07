@@ -13,6 +13,7 @@ import {ITalentLayerPlatformID} from "./interfaces/ITalentLayerPlatformID.sol";
 import "./libs/ERC2771RecipientUpgradeable.sol";
 import {IArbitrable} from "./interfaces/IArbitrable.sol";
 import {Arbitrator} from "./Arbitrator.sol";
+import "hardhat/console.sol";
 
 /**
  * @title TalentLayer Escrow Contract
@@ -475,7 +476,7 @@ contract TalentLayerEscrow is
             require(msg.value == 0, "Non-matching funds");
         }
 
-        require(_msgSender() == sender, "Access denied");
+        // require(_msgSender() == sender, "Access denied");
         require(proposal.ownerId == _proposalId, "Incorrect proposal ID");
         require(proposal.expirationDate >= block.timestamp, "Proposal expired");
         require(service.status == ITalentLayerService.Status.Opened, "Service status not open");

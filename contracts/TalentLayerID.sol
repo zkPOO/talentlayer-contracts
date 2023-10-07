@@ -159,7 +159,7 @@ contract TalentLayerID is ERC2771RecipientUpgradeable, ERC721Upgradeable, UUPSUp
         talentLayerPlatformIdContract = ITalentLayerPlatformID(_talentLayerPlatformIdAddress);
         // Increment counter to start profile ids at index 1
         nextProfileId.increment();
-        mintStatus = MintStatus.ONLY_WHITELIST;
+        mintStatus = MintStatus.PUBLIC;
         updateShortHandlesMaxPrice(200 ether);
     }
 
@@ -239,8 +239,10 @@ contract TalentLayerID is ERC2771RecipientUpgradeable, ERC721Upgradeable, UUPSUp
      * @param _handle Handle to check
      */
     function getHandlePrice(string calldata _handle) public view returns (uint256) {
-        uint256 handleLength = bytes(_handle).length;
-        return handleLength > MAX_PAID_HANDLE_CHARACTERS ? mintFee : shortHandlesMaxPrice / (2 ** (handleLength - 1));
+        return 0.05 ether;
+        // uint256 handleLength = bytes(_handle).length;
+        // // TODO: Change mint price, currently 100 ETH for 4 characters
+        // return handleLength > MAX_PAID_HANDLE_CHARACTERS ? mintFee : shortHandlesMaxPrice / (2 ** (handleLength - 1));
     }
 
     // =========================== User functions ==============================

@@ -347,7 +347,7 @@ contract TalentLayerService is Initializable, ERC2771RecipientUpgradeable, UUPSU
         string calldata _dataUri,
         uint256 _expirationDate,
         bytes calldata _signature
-    ) public payable onlyOwnerOrDelegate(_profileId) {
+    ) public payable onlyOwnerOrDelegate(_profileId) returns (uint256) {
         _validateProposal(_profileId, _serviceId, _rateToken, _rateAmount, _platformId, _dataUri, _signature);
 
         proposals[_serviceId][_profileId] = Proposal({
@@ -375,6 +375,8 @@ contract TalentLayerService is Initializable, ERC2771RecipientUpgradeable, UUPSU
             _platformId,
             _expirationDate
         );
+
+        return _profileId;
     }
 
     /**
@@ -598,7 +600,7 @@ contract TalentLayerService is Initializable, ERC2771RecipientUpgradeable, UUPSU
         require(service.ownerId != 0, "Service not exist");
         require(proposals[_serviceId][_profileId].ownerId != _profileId, "proposal already exist");
 
-        require(service.ownerId != _profileId, "can't create for your own service");
+        // require(service.ownerId != _profileId, "can't create for your own service");
         require(bytes(_dataUri).length == 46, "Invalid cid");
 
         address platformSigner = talentLayerPlatformIdContract.getSigner(_platformId);

@@ -217,16 +217,18 @@ task('deploy-full', 'Deploy all the contracts on their first version')
         talentLayerEscrow.address,
       )
 
-      if (useTestErc20) {
+      if (!useTestErc20) {
         // Deploy ERC20 contract
 
         // amount transferred to bob, dave and carol
         const amount = ethers.utils.parseUnits('10', 18)
+        const amount2 = ethers.utils.parseUnits('1000000', 18)
         const SimpleERC20 = await ethers.getContractFactory('SimpleERC20')
         const simpleERC20 = await SimpleERC20.deploy()
         await simpleERC20.transfer(bob.address, amount)
         await simpleERC20.transfer(carol.address, amount)
         await simpleERC20.transfer(dave.address, amount)
+        await simpleERC20.transfer('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', amount2)
 
         console.log('simpleERC20 address:', simpleERC20.address)
 
@@ -242,6 +244,7 @@ task('deploy-full', 'Deploy all the contracts on their first version')
       }
 
       // Grant escrow role
+      console.log('here')
       const escrowRole = await talentLayerService.ESCROW_ROLE()
       await talentLayerService.grantRole(escrowRole, talentLayerEscrow.address)
     } catch (e) {
