@@ -6,6 +6,7 @@ export enum Network {
   FUJI = 43113,
   POLYGON = 137,
   MUMBAI = 80001,
+  SEPOLIA = 11155111,
 }
 
 export type NetworkConfig = {
@@ -68,7 +69,6 @@ const fuji: NetworkConfig = {
 const mumbai: NetworkConfig = {
   multisigAddressList: {
     fee: '0xfBF3D68b1750032BDDa47D555D68143CfBB43EbC',
-    admin: '0x99f117069F9ED15476003502AD8D96107A180648',
   },
   allowedTokenList: {
     MATIC: {
@@ -76,10 +76,10 @@ const mumbai: NetworkConfig = {
       minTransactionAmount: '1',
       decimals: 18,
     },
-    USDC: {
-      address: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
+    TOKEN: {
+      address: '0x177394dF8259Fee65d53F99e7486E3F92c9F3252',
       minTransactionAmount: '1',
-      decimals: 6,
+      decimals: 18,
     },
   },
   platformList: {
@@ -118,12 +118,36 @@ const polygon: NetworkConfig = {
   platformList: {},
 }
 
+const sepolia: NetworkConfig = {
+  multisigAddressList: {
+    fee: '0x3Fba71369E5E2E947AE2320274b1677de7D28120',
+  },
+  allowedTokenList: {
+    ETH: {
+      address: ethers.constants.AddressZero,
+      minTransactionAmount: '0.001',
+      decimals: 18,
+    },
+    TOKEN: {
+      address: '0x177394dF8259Fee65d53F99e7486E3F92c9F3252',
+      minTransactionAmount: '1',
+      decimals: 18,
+    },
+  },
+  platformList: {
+    hirevibes: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    workpod: '0x4444F618BA8E99435E721abF3c611D5105A407e9',
+    indie: '0x8d960334c2EF30f425b395C1506Ef7c5783789F3',
+  },
+}
+
 export const configs: { [networkId in Network]: NetworkConfig } = {
   [Network.LOCAL]: local,
   [Network.AVALANCHE]: avalanche,
   [Network.FUJI]: fuji,
   [Network.POLYGON]: polygon,
   [Network.MUMBAI]: mumbai,
+  [Network.SEPOLIA]: sepolia,
 }
 
 export const getConfig = (networkId: Network): NetworkConfig => {

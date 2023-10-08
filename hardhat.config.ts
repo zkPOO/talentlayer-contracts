@@ -60,7 +60,10 @@ function getChainConfig(chain: Network): NetworkUserConfig {
       jsonRpcUrl = 'https://polygon-rpc.com/'
       break
     case Network.MUMBAI:
-      jsonRpcUrl = process.env.MUMBAI_RPC || 'https://matic-mumbai.chainstacklabs.com'
+      jsonRpcUrl = 'https://polygon-mumbai.blockpi.network/v1/rpc/public'
+      break
+    case Network.SEPOLIA:
+      jsonRpcUrl = 'https://ethereum-sepolia.publicnode.com'
       break
     default:
       jsonRpcUrl = 'https://mainnet.infura.io/v3/' + infuraApiKey
@@ -119,6 +122,7 @@ const config: HardhatUserConfig = {
     fuji: getChainConfig(Network.FUJI),
     polygon: getChainConfig(Network.POLYGON),
     mumbai: getChainConfig(Network.MUMBAI),
+    sepolia: getChainConfig(Network.SEPOLIA),
   },
   paths: {
     artifacts: './artifacts',

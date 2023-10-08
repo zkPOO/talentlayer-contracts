@@ -8,6 +8,10 @@ import { verifyAddress } from './utils'
  * @notice Task created only for test purposes of the upgradable process
  * @usage npx hardhat deploy-full --use-test-erc20 --verify --network mumbai
  */
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 task('deploy-full', 'Deploy all the contracts on their first version')
   .addFlag('useTestErc20', 'deploy a mock ERC20 contract')
   .addFlag('verify', 'verify contracts on etherscan')
@@ -181,6 +185,12 @@ task('deploy-full', 'Deploy all the contracts on their first version')
       // Add TalentLayerArbitrator to platform available arbitrators
       await talentLayerPlatformID.addArbitrator(talentLayerArbitrator.address, true)
 
+      console.log('before delay')
+      await delay(5000)
+      console.log('after delay')
+
+      const escrowRole = await talentLayerService.ESCROW_ROLE()
+      console.log('added role')
       const TalentLayerEscrow = await ethers.getContractFactory('TalentLayerEscrow')
       const talentLayerEscrowArgs: [string, string, string, string | undefined] = [
         talentLayerService.address,
@@ -217,36 +227,36 @@ task('deploy-full', 'Deploy all the contracts on their first version')
         talentLayerEscrow.address,
       )
 
-      if (!useTestErc20) {
-        // Deploy ERC20 contract
+      await talentLayerService.grantRole(escrowRole, talentLayerEscrow.address)
 
-        // amount transferred to bob, dave and carol
-        const amount = ethers.utils.parseUnits('10', 18)
-        const amount2 = ethers.utils.parseUnits('1000000', 18)
-        const SimpleERC20 = await ethers.getContractFactory('SimpleERC20')
-        const simpleERC20 = await SimpleERC20.deploy()
-        await simpleERC20.transfer(bob.address, amount)
-        await simpleERC20.transfer(carol.address, amount)
-        await simpleERC20.transfer(dave.address, amount)
-        await simpleERC20.transfer('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', amount2)
+      // if (useTestErc20) {
+      //   // Deploy ERC20 contract
 
-        console.log('simpleERC20 address:', simpleERC20.address)
+      //   // amount transferred to bob, dave and carol
+      //   const amount = ethers.utils.parseUnits('10', 18)
+      //   const amount2 = ethers.utils.parseUnits('1000000', 18)
+      //   const SimpleERC20 = await ethers.getContractFactory('SimpleERC20')
+      //   const simpleERC20 = await SimpleERC20.deploy()
+      //   await simpleERC20.transfer(bob.address, amount)
+      //   await simpleERC20.transfer(carol.address, amount)
+      //   await simpleERC20.transfer(dave.address, amount)
+      //   await simpleERC20.transfer('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', amount2)
 
-        // get the SimpleERC20 balance in wallet of bob, carol and dave
-        const balance = await simpleERC20.balanceOf(bob.address)
-        console.log('SimpleERC20 balance:', balance.toString())
-        const balance2 = await simpleERC20.balanceOf(carol.address)
-        console.log('SimpleERC20 balance2:', balance2.toString())
-        const balance3 = await simpleERC20.balanceOf(dave.address)
-        console.log('SimpleERC20 balance3:', balance3.toString())
+      //   console.log('simpleERC20 address:', simpleERC20.address)
 
-        setDeploymentProperty(network.name, DeploymentProperty.SimpleERC20, simpleERC20.address)
-      }
+      //   // get the SimpleERC20 balance in wallet of bob, carol and dave
+      //   const balance = await simpleERC20.balanceOf(bob.address)
+      //   console.log('SimpleERC20 balance:', balance.toString())
+      //   const balance2 = await simpleERC20.balanceOf(carol.address)
+      //   console.log('SimpleERC20 balance2:', balance2.toString())
+      //   const balance3 = await simpleERC20.balanceOf(dave.address)
+      //   console.log('SimpleERC20 balance3:', balance3.toString())
+
+      //   setDeploymentProperty(network.name, DeploymentProperty.SimpleERC20, simpleERC20.address)
+      // }
 
       // Grant escrow role
       console.log('here')
-      const escrowRole = await talentLayerService.ESCROW_ROLE()
-      await talentLayerService.grantRole(escrowRole, talentLayerEscrow.address)
     } catch (e) {
       console.log('------------------------')
       console.log('FAILED')
